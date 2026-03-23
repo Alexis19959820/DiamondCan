@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIAMOND CAN 大满罐 | 易拉罐落地保障方案</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        /* 极致极简高级风 (Premium Agency Vibe) */
+        :root {
+            --bg-white: #ffffff;
+            --bg-light: #fafafa;
+            --bg-gray: #f5f5f7;
+            --bg-dark: #0a0a0a;
+            --bg-black: #000000;
+            
+            --text-main: #111111;
+            --text-muted: #555555;
+            --text-light: #999999;
+            
+            --accent-gold: #c2a679; 
+            --accent-red: #dc2626;
+            
+            --border-color: #eaeaea;
+            --border-dark: #222222;
+            
+            --font-main: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
+            --font-title: 'PingFang SC', 'SimHei', sans-serif;
+            --font-num: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-white); color: var(--text-main);
+            font-family: var(--font-main); overflow-x: hidden; line-height: 1.8;
+            -webkit-font-smoothing: antialiased; padding-top: 80px; 
+        }
+
+        /* 解决标题孤字断行，去除 balance，采用 keep-all 防止中文词组断裂 */
+        h1, h2, h3, h4 { font-family: var(--font-title); font-weight: 500; line-height: 1.35; letter-spacing: -0.5px; word-break: keep-all;}
+
+        /* 导航栏 */
+        .site-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 80px;
+            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color); z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 5vw; transition: all 0.3s ease;
+        }
+        .header-logo img { max-height: 36px; width: auto; }
+        .nav-links { display: flex; gap: 3rem; }
+        .nav-links a {
+            text-decoration: none; color: var(--text-main); font-size: 0.85rem;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--accent-gold); }
+
+        .container { max-width: 1200px; margin: 0 auto; position: relative; }
+        .section { padding: 8vw 5vw; position: relative; }
+
+        .section-tag {
+            display: inline-flex; align-items: center; gap: 15px;
+            font-size: 0.8rem; color: var(--accent-gold); letter-spacing: 2px; 
+            text-transform: uppercase; margin-bottom: 2rem; font-weight: 600;
+        }
+        .section-tag::before { content: ''; width: 30px; height: 1px; background: var(--accent-gold); }
+
+        /* 1. 钩子区 (Hero Video) */
+        #hero { min-height: 85vh; display: flex; align-items: center; position: relative; overflow: hidden; background: #000;}
+        .hero-video-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden;}
+        .hero-video-wrapper video { width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%); opacity: 0.8;}
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 100%); z-index: 1;}
+        
+        .hero-content { max-width: 900px; position: relative; z-index: 2; color: #fff;}
+        #hero h1 { font-size: clamp(3rem, 5vw, 4.2rem); margin-bottom: 2rem; font-weight: 600; color: #fff;}
+        .hero-lead { font-size: 1.25rem; color: #ddd; margin-bottom: 4rem; max-width: 800px; line-height: 1.8;}
+        
+        .data-grid { display: flex; gap: 5rem; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 3rem;}
+        .data-item { flex: 1;}
+        .data-item .num { font-family: var(--font-num); font-size: 3.5rem; color: var(--accent-gold); font-weight: 300; display: block; line-height: 1; margin-bottom: 0.5rem;}
+        .data-item .desc { font-size: 0.95rem; color: #eee; font-weight: 500;}
+
+        /* 2. OEM 痛点区 */
+        .pain-section { background: var(--bg-white); border-top: 1px solid var(--border-color);}
+        .pain-header { text-align: center; margin-bottom: 5rem;}
+        .pain-header h2 { font-size: 2.8rem; margin-bottom: 1.5rem; color: var(--text-main);}
+        .pain-header p { color: var(--text-muted); font-size: 1.15rem; max-width: 700px; margin: 0 auto;}
+        
+        .pain-list { display: flex; flex-direction: column; gap: 3rem; max-width: 900px; margin: 0 auto;}
+        .pain-item { display: flex; gap: 3rem; align-items: flex-start; background: var(--bg-gray); padding: 3rem; border-radius: 8px;}
+        .pain-num { font-family: var(--font-num); font-size: 1.8rem; color: var(--accent-gold); font-weight: 500; width: 40px; border-bottom: 2px solid var(--accent-gold); padding-bottom: 5px;}
+        .pain-content { flex: 1;}
+        .pain-content h3 { font-size: 1.5rem; margin-bottom: 1rem; font-weight: 600;}
+        .pain-content p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 1.5rem;}
+        
+        /* 旧的红字废弃，采用全新的强烈警示框 */
+        .danger-alert-mini { display: inline-flex; align-items: center; gap: 10px; background: rgba(220, 38, 38, 0.08); border-left: 3px solid var(--accent-red); padding: 0.8rem 1.2rem; border-radius: 0 4px 4px 0; color: var(--accent-red); font-size: 0.95rem; font-weight: 600;}
+
+        /* 3. 打样逻辑重构 (复刻参考图) */
+        .compare-section { background: #ffffff; padding-bottom: 10vw;}
+        .compare-header { text-align: center; margin-bottom: 4rem;}
+        .compare-header h2 { font-size: 2.5rem; font-weight: 600; margin-bottom: 1.5rem;}
+        .compare-header p { font-size: 1.15rem; color: var(--text-muted);}
+        
+        .compare-wrapper { display: flex; border: 1px solid var(--border-color); border-radius: 2px; box-shadow: 0 10px 40px rgba(0,0,0,0.03);}
+        .compare-box { flex: 1; padding: 5rem 4rem; }
+        .compare-box.left { background: #ffffff; border-right: 1px solid var(--border-color);}
+        .compare-box.right { background: var(--bg-gray); }
+        
+        .compare-box h3 { font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 600; color: var(--text-main);}
+        .compare-box > p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 3rem;}
+        .compare-list { list-style: none; }
+        .compare-list li { position: relative; padding: 1.5rem 0 1.5rem 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 1.05rem; line-height: 1.6; color: var(--text-main);}
+        .compare-list li:last-child { border-bottom: none; }
+        .compare-list li::before { content: ''; position: absolute; left: 0; top: 2.2rem; width: 6px; height: 6px; background: var(--accent-gold); border-radius: 50%; }
+        
+        /* 强视觉化的导致后果区块 */
+        .consequence-box { margin-top: 15px; background: rgba(220, 38, 38, 0.05); border-left: 4px solid var(--accent-red); padding: 12px 16px; border-radius: 0 4px 4px 0; display: flex; flex-direction: column; gap: 4px; }
+        .consequence-box .icon { font-weight: 600; color: var(--accent-red); font-size: 0.9rem; }
+        .consequence-box .text { color: var(--accent-red); font-size: 0.95rem; font-weight: 600; }
+
+        /* 4. 干胶印物理界限科普 */
+        .dry-offset-section { background: var(--bg-dark); color: #fff; padding: 8vw 5vw; border-top: 1px solid var(--border-dark);}
+        .physics-header { margin-bottom: 5rem; text-align: center;}
+        .physics-header h2 { font-size: 2.8rem; font-weight: 600; margin-bottom: 1.5rem;}
+        .physics-header p { font-size: 1.15rem; color: #aaa; line-height: 1.7; max-width: 800px; margin: 0 auto;}
+        
+        .dry-offset-container { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; align-items: center; max-width: 1200px; margin: 0 auto;}
+        .dry-offset-img { background: transparent; text-align: center;}
+        /* 精确使用示意图.png */
+        .dry-offset-img img { width: 100%; max-width: 500px; object-fit: contain; margin-bottom: 2rem;}
+        .dry-offset-img p { font-size: 0.95rem; color: var(--text-muted); text-align: left; line-height: 1.6;}
+
+        .phy-rules { display: flex; flex-direction: column; gap: 2rem;}
+        .phy-rule-item { background: rgba(255,255,255,0.03); padding: 2rem; border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; border: 1px solid rgba(255,255,255,0.05); border-left-width: 4px;}
+        .phy-rule-item h4 { font-size: 1.3rem; margin-bottom: 1rem; font-weight: 600; color: #fff;}
+        .phy-rule-item p { font-size: 1rem; color: #aaa; margin-bottom: 1.5rem; line-height: 1.6;}
+        .phy-rule-item .alert { color: #ffeded; font-weight: 500; font-size: 0.95rem; background: rgba(220, 38, 38, 0.3); display: inline-block; padding: 0.6rem 1rem; border-radius: 4px; border-left: 3px solid var(--accent-red);}
+
+        /* 5. 效率误区 - 大字报与警告 */
+        .alert-section { background: var(--bg-gray); padding: 10vw 5vw; text-align: center;}
+        .alert-huge-text { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 600; line-height: 1.2; margin-bottom: 2rem; color: var(--text-main);}
+        .alert-sub-text { font-size: 1.25rem; color: var(--text-muted); max-width: 800px; margin: 0 auto 5rem auto; font-weight: 400; line-height: 1.8;}
+        
+        .alert-content-box { display: flex; align-items: stretch; background: #fff; border: 1px solid var(--border-color); border-radius: 8px; max-width: 1000px; margin: 0 auto; overflow: hidden; text-align: left; box-shadow: 0 20px 50px rgba(0,0,0,0.03);}
+        .alert-img { flex: 1; position: relative;}
+        .alert-img img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85);}
+        .alert-text { flex: 1.2; padding: 4rem;}
+        .alert-text h4 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-main); border-left: 3px solid var(--accent-red); padding-left: 1rem; font-weight: 600;}
+        .alert-text p { font-size: 1rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 3rem;}
+        
+        /* 大字报内的强警示 */
+        .danger-alert-major { background: var(--accent-red-light); border: 1px solid rgba(220, 38, 38, 0.2); border-left: 4px solid var(--accent-red); padding: 1.5rem; border-radius: 0 4px 4px 0;}
+        .danger-alert-major .icon { font-weight: bold; color: var(--accent-red); margin-bottom: 0.5rem; font-size: 1.1rem;}
+        .danger-alert-major .text { color: var(--text-main); font-weight: 600; font-size: 1.05rem; line-height: 1.5;}
+
+        /* 6. 三得利分色实证 (巨幕化提速版) */
+        .case-study-section { background: var(--bg-white); }
+        .peach-header { text-align: center; margin-bottom: 4rem; max-width: 900px; margin-left: auto; margin-right: auto;}
+        .peach-header h2 { font-size: 2.8rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-main);}
+        .peach-header p { font-size: 1.15rem; color: var(--text-muted); line-height: 1.8;}
+        
+        /* 极度压缩文字区，扩大图片区 (1fr : 1.8fr) */
+        .peach-interaction { display: grid; grid-template-columns: 1fr 1.8fr; gap: 3rem; align-items: center; max-width: 1300px; margin: 0 auto; background: var(--bg-gray); padding: 3rem; border-radius: 8px;}
+        
+        .peach-steps { display: flex; flex-direction: column; gap: 0.8rem;}
+        .p-step { padding: 1.2rem; border-radius: 4px; border-left: 3px solid transparent; transition: all 0.2s; opacity: 0.3;}
+        .p-step.active { background: #fff; border-left-color: var(--accent-gold); opacity: 1; box-shadow: 0 5px 20px rgba(0,0,0,0.03);}
+        .p-step h4 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px;}
+        .p-step p { font-size: 0.9rem; color: var(--text-muted); margin: 0; line-height: 1.5;}
+        .color-badge { width: 14px; height: 14px; border-radius: 2px; display: inline-block; border: 1px solid #ddd;}
+        
+        /* 巨幕动画区域：高度提升至 750px */
+        .peach-canvas { position: relative; height: 750px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: transparent;}
+        .layer { position: absolute; width: 100%; height: 100%; object-fit: contain; opacity: 0; mix-blend-mode: multiply; transform: scale(1.15) translateY(-30px); transition: opacity 0.3s, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+        .layer.visible { opacity: 1; transform: scale(1) translateY(0);}
+        .layer.real-product { mix-blend-mode: normal; z-index: 10; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.15));}
+        
+        .canvas-label { position: absolute; bottom: 20px; text-align: center; width: 100%; font-size: 1.1rem; color: var(--text-main); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; z-index: 20; opacity: 0;}
+
+        /* 7. 全品类高定画廊 (无框，无背景色，全部 png 透明融入黑底) */
+        .gallery-section { background: var(--bg-black); color: #fff; padding: 8vw 0; overflow: hidden;}
+        .gallery-header { text-align: center; margin-bottom: 5rem; padding: 0 5vw;}
+        .gallery-header h2 { font-size: 2.8rem; font-weight: 600;}
+        
+        .marquee-wrapper { width: 100%; overflow: hidden; white-space: nowrap; position: relative;}
+        .marquee-wrapper::before, .marquee-wrapper::after { content: ''; position: absolute; top: 0; width: 15vw; height: 100%; z-index: 2; pointer-events: none;}
+        .marquee-wrapper::before { left: 0; background: linear-gradient(to right, var(--bg-black), transparent); }
+        .marquee-wrapper::after { right: 0; background: linear-gradient(to left, var(--bg-black), transparent); }
+        
+        .marquee-content { display: inline-flex; gap: 6rem; padding-left: 6rem; animation: marquee 50s linear infinite;}
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        
+        /* 彻底纯净无框设计 */
+        .gallery-item { display: inline-flex; flex-direction: column; align-items: center; width: 280px; white-space: normal; text-align: center; background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important;}
+        .gallery-item img { height: 380px; width: auto; object-fit: contain; margin-bottom: 2rem; background: transparent !important; border: none !important;}
+        .g-name { font-size: 1.2rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem;}
+        .g-desc { font-size: 0.95rem; color: #888;}
+
+        /* 8. 资源赋能：动态箭头与数据 */
+        .empower-section { border-top: 1px solid var(--border-color); background: var(--bg-white);}
+        .empower-header { text-align: center; margin-bottom: 5rem; max-width: 900px; margin-left: auto; margin-right: auto;}
+        .empower-header h2 { font-size: 2.8rem; font-weight: 600; margin-bottom: 1.5rem;}
+        .empower-header p { font-size: 1.15rem; color: var(--text-muted);}
+
+        .empower-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4rem;}
+        .stat-card { display: flex; flex-direction: column; gap: 1.5rem; background: var(--bg-gray); padding: 3.5rem 3rem; border-radius: 8px; border: 1px solid var(--border-color);}
+        .stat-card h3 { font-size: 1.4rem; font-weight: 600; color: var(--text-main);}
+        .stat-card p { font-size: 1rem; color: var(--text-muted); line-height: 1.7; margin: 0;}
+        
+        /* 巨大百分比与动态箭头组件 */
+        .massive-stat { display: flex; align-items: baseline; gap: 10px; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.1);}
+        .massive-stat .num { font-family: var(--font-num); font-size: 5rem; font-weight: 700; color: var(--accent-gold); line-height: 1;}
+        .massive-stat .unit { font-size: 1.2rem; color: var(--text-main); font-weight: 600;}
+        
+        /* 动态向上箭头 */
+        .arrow-up { display: inline-block; color: var(--accent-gold); font-size: 3.5rem; line-height: 1; margin-left: 15px; font-weight: bold; animation: bounceUp 1.5s infinite ease-in-out;}
+        @keyframes bounceUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .mini-chart { display: flex; flex-direction: column; gap: 1.2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.1);}
+        .chart-row { display: flex; align-items: center; gap: 1rem;}
+        .chart-label { width: 75px; font-size: 0.9rem; color: var(--text-main); font-weight: 600;}
+        .chart-bar-wrap { flex: 1; height: 10px; background: #e0e0e0; border-radius: 5px; overflow: hidden;}
+        .chart-bar { height: 100%; border-radius: 5px; width: 0%; transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);}
+        .bar-red { background: var(--accent-red); }
+        .bar-gold { background: var(--accent-gold); }
+        .chart-val { width: 50px; font-size: 0.9rem; font-weight: 600; text-align: right;}
+        
+        /* 9. Logo背书墙 */
+        .logo-section { background: var(--bg-white); text-align: center; border-top: 1px solid var(--border-color);}
+        .logo-wrapper { margin-top: 3rem; display: flex; justify-content: center; mix-blend-mode: multiply;}
+        /* 严格使用 png */
+        .logo-wrapper img { width: 100%; max-width: 1000px; height: auto; object-fit: contain; opacity: 0.9;}
+
+        /* 10. 收口区 */
+        .footer-cta { text-align: center; padding: 10vw 5vw; background: var(--bg-dark); color: #fff;}
+        .footer-cta h2 { font-size: 2.8rem; margin-bottom: 2rem; color: #fff; font-weight: 500;}
+        .footer-cta p { color: #aaa; font-size: 1.15rem; line-height: 1.8; max-width: 700px; margin: 0 auto;}
+        
+        @media (max-width: 900px) {
+            .nav-links { display: none; } 
+            .pain-item, .compare-wrapper, .dry-offset-container, .alert-content-box, .peach-interaction, .empower-grid { flex-direction: column; grid-template-columns: 1fr; gap: 3rem;}
+            .compare-box { padding: 3rem 2rem; }
+            .compare-box.left { border-right: none; border-bottom: 1px solid var(--border-color); }
+            .alert-text { padding: 3rem 2rem; }
+            .section { padding: 12vw 6vw; } 
+            #hero h1 { font-size: 2.8rem; }
+            .alert-huge-text { font-size: 2.5rem; }
+            .massive-stat .num { font-size: 3.5rem; }
+            .peach-canvas { height: 450px; }
+            .hero-video-wrapper video { object-position: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <header class="site-header" id="header">
+        <a href="#" class="header-logo">
+            <img src="大满罐logo.png" alt="DIAMOND CAN 大满罐">
+        </a>
+        <nav class="nav-links">
+            <a href="#friction">交付隐患</a>
+            <a href="#paradigm">打样逻辑</a>
+            <a href="#physics">干胶印原理</a>
+            <a href="#casestudy">分色实证</a>
+            <a href="#empowerment">效能赋能</a>
+        </nav>
+    </header>
+
+    <!-- 1. 钩子区 (视频背景) -->
+    <section id="hero" class="section">
+        <div class="hero-video-wrapper">
+            <video autoplay loop muted playsinline>
+                <source src="易拉罐高清视频.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="section-tag" style="color: #fff; border-color: #fff;">TO OEM 代工厂 & 品牌方</div>
+            <h1>OEM 真正难的，不是生产。<br>而是把结果，毫无偏差地交对。</h1>
+            <p class="hero-lead">
+                品牌最后验收的，不是流程，而是货架上的包装卖相。<br>
+                罐厂执行的是机台参数，品牌要的是绝佳颜值，OEM 夹在中间背负最终结果。<br>
+                大满罐的存在，就是为您填平这道“懂审美”与“懂机器”的工业鸿沟。
+            </p>
+            
+            <div class="data-grid g-up">
+                <div class="data-item">
+                    <span class="num">80%+</span>
+                    <span class="desc">在前端排除底层的工艺雷区</span>
+                </div>
+                <div class="data-item">
+                    <span class="num">150+</span>
+                    <span class="desc">高难度商业 SKU 的量产沉淀</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. OEM 痛点区 (强视觉警示) -->
+    <section id="friction" class="pain-section section">
+        <div class="container">
+            <div class="pain-header g-up">
+                <div class="section-tag">The Hidden Friction</div>
+                <h2>如果缺失前端干预，<br>项目实则在一步步累积灾难。</h2>
+                <p>表面上看，拿着设计图直接投产是在赶进度；实际上是在把致命问题往后推，所有的后果最终都由 OEM 承担。</p>
+            </div>
+            
+            <div class="pain-list">
+                <div class="pain-item g-up">
+                    <div class="pain-num">01</div>
+                    <div class="pain-content">
+                        <h3>品牌输不起的时间窗口</h3>
+                        <p>品牌不懂金属边界，提出无法落地的纯视觉要求。若直接盲打，反复的推诿沟通将耗费极长周期。</p>
+                        <div class="danger-alert-mini">⚠️ 错失真正可量产的最佳上市时机</div>
+                    </div>
+                </div>
+                <div class="pain-item g-up">
+                    <div class="pain-num">02</div>
+                    <div class="pain-content">
+                        <h3>前端看着快，后端全返工</h3>
+                        <p>依赖打样师傅手工极端微调侥幸过关。品牌满心欢喜，却不知这种“勉强像”的样罐在大货线上根本印不出来。</p>
+                        <div class="danger-alert-mini">⚠️ 修改成本飙升，项目进度彻底卡死</div>
+                    </div>
+                </div>
+                <div class="pain-item g-up">
+                    <div class="pain-num">03</div>
+                    <div class="pain-content">
+                        <h3>大货机台前彻底失控</h3>
+                        <p>到了大货机台前，色彩发灰、网点糊死。现场停机调色不仅拖垮罐厂产能 KPI，若底子错甚至直接整批废版。</p>
+                        <div class="danger-alert-mini">⚠️ 货不对版的退货客诉，由 OEM 全额买单</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 打样逻辑重构：对比后果 -->
+    <section id="paradigm" class="section compare-section">
+        <div class="container">
+            <div class="compare-header g-up">
+                <h2>为什么两片罐，更不应该跳过打样？</h2>
+                <p>先打样再开机，不是增加环节，而是让大货量产少一点运气，多一点把握。</p>
+            </div>
+            
+            <div class="compare-wrapper g-up">
+                <div class="compare-box left">
+                    <h3>常规纸张平面印刷</h3>
+                    <p>承印面平整、白色底，变量极少。</p>
+                    <ul class="compare-list">
+                        <li>行业默认先看打样确认，再上机。</li>
+                        <li>开机费和打样费本身就是履约的合理标配。</li>
+                        <li>容错率较高，现场颜色微调空间相对较大。</li>
+                    </ul>
+                </div>
+                <div class="compare-box right">
+                    <h3>复杂的金属两片罐印刷</h3>
+                    <p>变量远超纸张。如果纸张都不敢跳过打样，两片罐则更不能靠盲赌。</p>
+                    <ul class="compare-list">
+                        <li>曲面结构，金属底色直接参与反光与成像干涉。<br>
+                            <div class="consequence-box">
+                                <div class="icon">🚨 导致后果</div>
+                                <div class="text">若无分色预判，品牌主色极易失真、发灰，显廉价。</div>
+                            </div>
+                        </li>
+                        <li>极其受限的版位，湿压湿（Wet-on-Wet）叠印极度复杂。<br>
+                            <div class="consequence-box">
+                                <div class="icon">🚨 导致后果</div>
+                                <div class="text">若无让色处理，相邻油墨必然互相污染、边缘显脏。</div>
+                            </div>
+                        </li>
+                        <li>3万罐/小时的高速量产会成倍放大前端微小的偏差。<br>
+                            <div class="consequence-box">
+                                <div class="icon">🚨 导致后果</div>
+                                <div class="text">若无反向补偿，渐变势必生硬断层，精美细节全毁。</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. 物理界限：干胶印科普 (结合 Ardagh 原理) -->
+    <section id="physics" class="section dry-offset-section">
+        <div class="container">
+            <div class="physics-header g-up">
+                <div class="section-tag" style="border-color: #555; color: #888;">Dry Offset Printing</div>
+                <h2>一切视觉偏差的源头：<br>不容打破的金属印刷法则。</h2>
+                <p>为什么在纸上能印好的图，在金属上印不出来？这无关态度，而是源于金属特有的干胶印机台原理。忽视它，就是在为量产埋雷。</p>
+            </div>
+            
+            <div class="dry-offset-container">
+                <!-- 原理图: 严格指向 易拉罐印刷设备-示意图.png -->
+                <div class="dry-offset-img g-slide">
+                    <img src="易拉罐印刷设备-示意图.png" alt="易拉罐干胶印工作原理">
+                    <p><strong>Dry Offset 核心原理：</strong>最高达 8 个颜色的墨辊，将油墨<strong>同步打在同一块橡皮布（Blanket）上</strong>。随后圆柱形铝罐滚过，所有颜色在<strong>瞬间一次性转移</strong>至罐身。</p>
+                </div>
+                
+                <!-- 导致的致命后果 -->
+                <div class="phy-rules g-slide">
+                    <div class="phy-rule-item">
+                        <h4>致命的“湿压湿 (Wet-on-Wet)”</h4>
+                        <p>由于所有油墨同时在橡皮布上转移，颜色间毫无干燥时间。若缺乏制版时 0.15mm 的“让色 (Trapping)”避让，油墨必然在机台上互相串色，印出的边缘必定糊死。</p>
+                    </div>
+                    
+                    <div class="phy-rule-item">
+                        <h4>极其狂暴的机台压力</h4>
+                        <p>大货线以高达 3万罐/小时 运转，压印力会将原本细小的印刷网点放大 20-30%。若不提前用算法将原图网点“反向缩小补偿”，大货生产时的优美渐变会全变死黑的色块。</p>
+                    </div>
+                    
+                    <div class="phy-rule-item">
+                        <h4>0 吸墨率的金属底板</h4>
+                        <p>铝罐表面光滑不吸墨，常规的 CMYK 调色经验完全失效。不进行专业的白底（White Base）遮盖率计算，光线会穿透油墨漫反射，品牌主色调将发暗失真。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 商业效率误区 - 大字报警示 -->
+    <section class="section alert-section">
+        <div class="container g-up">
+            <h2 class="alert-huge-text">车间现场，<br>从来都不是万能修正场。</h2>
+            <p class="alert-sub-text">跳过专业的打样验证直飞大货线，本质上是拿极其昂贵的“机时费”在盲目试错。</p>
+            
+            <div class="alert-content-box">
+                <div class="alert-img">
+                    <img src="易拉罐印刷调试（颜色压力）.jpg" alt="现场机台调试">
+                </div>
+                <div class="alert-text">
+                    <h4>底子错了，调机也救不回来</h4>
+                    <p>在现场，机长能做的仅仅是微调油墨量和压力。如果前端制版时，分色逻辑、让色间隙等底层框架已经出错，现场无论怎么停机盲调，都绝对不可能印出品牌想要的高级感。</p>
+                    
+                    <h4>制版厂的“责任盲区”</h4>
+                    <p>把图纸直发制版厂，但制版厂的职责仅是“把印版输出”，而非“对最终货架视觉负责”。</p>
+                    
+                    <div class="danger-alert-major">
+                        <div class="icon">🚨 商业危机</div>
+                        <div class="text">现场反复停机盲调不仅吞噬工厂的产能 KPI，更极易面临整批废版的绝境。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. 核心重构：脱敏白桃分色叠加动画 (巨幕画板) -->
+    <section id="casestudy" class="section case-study-section">
+        <div class="container">
+            <div class="peach-header g-up">
+                <div class="section-tag">Reverse Engineering</div>
+                <h2>把感性的平面色块，<br>演算为极严密的工厂物理指令。</h2>
+                <p>好结果绝非碰巧。我们用严密的算法与丰富的工业量产经验，替代现场的盲目试错。</p>
+            </div>
+            
+            <div class="peach-interaction g-up">
+                <!-- 动画控制步骤文本 -->
+                <div class="peach-steps" id="peach-steps">
+                    <div class="p-step" id="step-0">
+                        <h4><span class="color-badge" style="background:#fde047;"></span> 1. Yellow Base 底黄铺垫</h4>
+                        <p>彻底遮盖金属本色，铺垫水果的暖色基调与光影基础。</p>
+                    </div>
+                    <div class="p-step" id="step-1">
+                        <h4><span class="color-badge" style="background:#fbcfe8;"></span> 2. Pink Dot Gain 构建渐变</h4>
+                        <p>精密网点排列，构建白桃初熟的柔和渐变过渡。</p>
+                    </div>
+                    <div class="p-step" id="step-2">
+                        <h4><span class="color-badge" style="background:#be123c;"></span> 3. Deep Red 塑造立体感</h4>
+                        <p>利用机台压力被动扩张塑造鲜嫩的立体感。</p>
+                    </div>
+                    <div class="p-step" id="step-3">
+                        <h4><span class="color-badge" style="background:#16a34a;"></span> 4. Green Leaf 防污处理</h4>
+                        <p>独立的绿色块，运用极微让色避免与桃身互染糊死。</p>
+                    </div>
+                    <div class="p-step" id="step-4">
+                        <h4><span class="color-badge" style="background:#78350f;"></span> 5. Brown Stem 提纯细节</h4>
+                        <p>细节颜色点缀，完成五色精密叠加的分色演算。</p>
+                    </div>
+                    <div class="p-step" id="step-5" style="border-left-color: var(--accent-gold); background: #fffcf8;">
+                        <h4 style="color: var(--accent-gold);">最终实物：油墨与压力的完美落地</h4>
+                        <p>必须选择精准的油墨与压力配合，才能在铝材上印出这颗富有食欲、栩栩如生的水果。</p>
+                    </div>
+                </div>
+                
+                <!-- 动态叠加画板 (提速版，高度放大至 750px) -->
+                <div class="peach-canvas">
+                    <img src="白桃-底黄.jpg" class="layer l-0" alt="底黄">
+                    <img src="白桃-粉红.jpg" class="layer l-1" alt="粉红">
+                    <img src="白桃-深红.jpg" class="layer l-2" alt="深红">
+                    <img src="白桃-绿.jpg" class="layer l-3" alt="绿">
+                    <img src="白桃-棕.jpg" class="layer l-4" alt="棕">
+                    
+                    <img src="白桃-最终效果（实物）.jpg" class="layer l-5 real-product" alt="最终实物">
+                    <div class="canvas-label">某国际头部品牌爆款实拍</div>
+                </div>
+            </div>
+            
+            <p style="text-align: center; margin-top: 3rem; color: var(--text-muted); font-size: 0.95rem;">
+                * 凭借极高的落地确定性，大满罐已成为众多国际头部品牌中国本土化生产的御用技术供应商。
+            </p>
+        </div>
+    </section>
+
+    <!-- 7. 全品类高定画廊 (无框无底色，全png透明无缝融入黑底) -->
+    <section id="gallery" class="section gallery-section">
+        <div class="gallery-header g-up">
+            <div class="section-tag" style="color: #666; border-color: #555;">Premium Portfolio</div>
+            <h2 style="color: #fff;">无论是何种品类，我们都在突破落地的上限。</h2>
+        </div>
+        
+        <div class="marquee-wrapper">
+            <div class="marquee-content">
+                <!-- 第一组 -->
+                <div class="gallery-item">
+                    <img src="和乐怡案例图1.png" alt="Horoyoi Peach">
+                    <span class="g-name">某头部品牌</span><span class="g-desc">大面积晕染与平滑渐变</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="和乐怡案例图2.png" alt="Horoyoi Mango">
+                    <span class="g-name">某头部品牌</span><span class="g-desc">水果材质高级逼真还原</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="百威科罗娜啤酒.png" alt="Budweiser Corona">
+                    <span class="g-name">百威科罗娜</span><span class="g-desc">品牌超级符号绝对锁色</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="布鲁大师.png" alt="Blue Dash">
+                    <span class="g-name">BLUE DASH</span><span class="g-desc">深色高饱和叠加与留白</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="海底捞案例.png" alt="Haidilao Beer">
+                    <span class="g-name">海底捞精酿</span><span class="g-desc">透光展现液态流动感</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="盒马气泡果汁.png" alt="Freshippo">
+                    <span class="g-name">盒马 FRESHIPPO</span><span class="g-desc">插画极微让色防串色</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="酸奶罐罐.png" alt="Yogurt">
+                    <span class="g-name">酸奶罐罐</span><span class="g-desc">极简大平网实地印刷</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="小象超市西打气泡酒.png" alt="Xiao Xiang Cider">
+                    <span class="g-name">小象超市</span><span class="g-desc">红版高亮色彩极致提纯</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="魔量.png" alt="M-Power">
+                    <span class="g-name">魔量 M-POWER</span><span class="g-desc">极端撞色的 0.1mm 防污</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="万有引力.png" alt="Gravity">
+                    <span class="g-name">万有引力</span><span class="g-desc">浅色系图文高精锐化</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="elppa.png" alt="ELPPA">
+                    <span class="g-name">ELPPA</span><span class="g-desc">大面积专色高压平稳输出</span>
+                </div>
+                
+                <!-- 第二组用于无缝循环 -->
+                <div class="gallery-item">
+                    <img src="和乐怡案例图1.png" alt="Horoyoi Peach">
+                    <span class="g-name">某头部品牌</span><span class="g-desc">大面积晕染与平滑渐变</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="和乐怡案例图2.png" alt="Horoyoi Mango">
+                    <span class="g-name">某头部品牌</span><span class="g-desc">水果材质高级逼真还原</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="百威科罗娜啤酒.png" alt="Budweiser Corona">
+                    <span class="g-name">百威科罗娜</span><span class="g-desc">品牌超级符号绝对锁色</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="布鲁大师.png" alt="Blue Dash">
+                    <span class="g-name">BLUE DASH</span><span class="g-desc">深色高饱和叠加与留白</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. 资源赋能：全图表可视化与动态提速箭头 -->
+    <section id="empowerment" class="section empower-section">
+        <div class="container">
+            <div class="empower-header g-up">
+                <div class="section-tag">Capacity & Empowerment</div>
+                <h2>不只是懂工艺，更让整个项目跑得顺畅。</h2>
+                <p>对于 OEM 来说，最终的买单点在于：能不能避免返工、能不能排进核心大厂产线。</p>
+            </div>
+            
+            <div class="empower-grid">
+                <div class="stat-card g-up">
+                    <h3 style="border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 1rem; margin-bottom: 2rem;">化解拉扯 ➔ 单向推进</h3>
+                    <p>用精确算法预判替代盲目手工试错，把现场解决不了的问题提前规避，坚决保护 OEM 订单利润。</p>
+                    <div class="mini-chart">
+                        <div class="chart-row">
+                            <span class="chart-label">传统盲试</span>
+                            <div class="chart-bar-wrap"><div class="chart-bar bar-red fill-anim" style="width: 85%;"></div></div>
+                            <span class="chart-val">3-5 次</span>
+                        </div>
+                        <div class="chart-row">
+                            <span class="chart-label">大满罐确样</span>
+                            <div class="chart-bar-wrap"><div class="chart-bar bar-gold fill-anim" style="width: 30%;"></div></div>
+                            <span class="chart-val">1-2 次</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card g-up">
+                    <h3 style="border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 1rem; margin-bottom: 2rem;">前置除雷 ➔ 稳控大货</h3>
+                    <p><strong>彻底避免现场盲调的时间吞噬。</strong>解决底层工艺逻辑，避免机台前高昂的试错拖垮工厂产能。</p>
+                    <div class="massive-stat">
+                        <span class="num counter" data-target="30">0</span>
+                        <span class="unit">% 调机耗损节省</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card g-up">
+                    <h3 style="border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 1rem; margin-bottom: 2rem;">掌握话语权 ➔ 产线绿灯</h3>
+                    <p>拿着成熟无工艺盲区的方案，<strong>直切全国核心大厂的加急排产通道。</strong></p>
+                    <div class="massive-stat">
+                        <span class="num counter" data-target="49">0</span>
+                        <span class="unit">% 落地提速</span>
+                        <div class="arrow-up">↑</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. Logo背书墙 -->
+    <section class="section logo-section">
+        <div class="container">
+            <h2 style="font-size: 1.8rem; color: var(--text-main); font-weight: 600; margin-bottom: 3rem;">实力验证的行业标准</h2>
+            <div class="logo-wrapper g-up">
+                <!-- 确保格式为png -->
+                <img src="客户logo墙.png" alt="大满罐全球合作客户品牌墙">
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. 终局收口 -->
+    <section class="footer-cta">
+        <div class="container g-fade">
+            <div class="section-tag" style="border-color: rgba(255,255,255,0.3); color: var(--text-light);">Our Role</div>
+            <h2>大满罐，让您更容易把结果交对。</h2>
+            <p>
+                站在品牌这边，懂他们对视觉效果的绝对渴望；<br>
+                站在罐厂这边，懂他们为什么极度抗拒现场反复调压；<br>
+                更站在 OEM 这边，懂您最怕的后端返工与交付延期。<br>
+            </p>
+            <p style="font-size: 1.45rem; color: var(--accent-gold); font-weight: 500; margin-top: 3rem;">
+                我们将感性的审美语言，精准重写为冷酷的机器精密工艺。<br>让品牌更放心，OEM 更有把握，罐厂更容易执行。
+            </p>
+            <div style="margin-top: 6rem; color: #555; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                Great Creativity Deserves Flawless Execution. <br>
+                上海大满罐品牌管理有限公司 © 2026
+            </div>
+        </div>
+    </section>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 导航栏滚动阴影
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.style.boxShadow = window.scrollY > 50 ? '0 4px 20px rgba(0,0,0,0.05)' : 'none';
+        });
+
+        // 数字跳动动画
+        document.querySelectorAll('.counter').forEach(counter => {
+            ScrollTrigger.create({
+                trigger: counter, start: "top 90%", once: true,
+                onEnter: () => gsap.to(counter, { innerHTML: +counter.getAttribute('data-target'), duration: 2, snap: { innerHTML: 1 }, ease: "power2.out" })
+            });
+        });
+
+        // 进度条动画
+        document.querySelectorAll('.fill-anim').forEach(fill => {
+            const targetWidth = fill.style.width;
+            fill.style.width = '0%';
+            ScrollTrigger.create({ trigger: fill, start: "top 85%", onEnter: () => fill.style.width = targetWidth });
+        });
+
+        // 统一组件淡入动画
+        gsap.utils.toArray('.g-up').forEach(el => gsap.from(el, { scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" }, y: 40, opacity: 0, duration: 0.8, ease: "power2.out" }));
+        gsap.utils.toArray('.g-slide').forEach((el, i) => gsap.from(el, { scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" }, x: i % 2 === 0 ? -40 : 40, opacity: 0, duration: 0.8, ease: "power2.out" }));
+        gsap.utils.toArray('.g-fade').forEach(el => gsap.from(el, { scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" }, opacity: 0, duration: 1.2, ease: "power2.out" }));
+
+        // 核心重头戏：白桃五色叠加演算动画 (加速升级版)
+        function initPeachAnimation() {
+            const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.5 }); // 缩短循环等待
+            
+            // 设定初始位移与透明度
+            tl.set('.peach-canvas .layer', { opacity: 0, scale: 1.2, y: -40 });
+            tl.set('.peach-steps .p-step', { opacity: 0.3, backgroundColor: 'transparent', borderLeftColor: 'transparent' });
+            tl.set('.canvas-label', { opacity: 0 });
+
+            for (let i = 0; i <= 5; i++) {
+                // 1. 激活左侧文字卡片 (速度加快)
+                tl.to(`#step-${i}`, { opacity: 1, backgroundColor: 'var(--bg-gray)', borderLeftColor: i===5 ? '#c2a679' : '#111', duration: 0.15 }, i === 0 ? 0.2 : "+=0.35");
+                
+                // 2. 右侧对应图层重重砸下 (模拟快速干胶印的压印感)
+                tl.to(`.l-${i}`, { opacity: 1, scale: 1, y: 0, duration: 0.3, ease: 'back.out(1.5)' }, "<");
+                
+                // 3. 黯淡上一步文字
+                if (i > 0 && i < 5) {
+                    tl.to(`#step-${i-1}`, { opacity: 0.3, backgroundColor: 'transparent', borderLeftColor: 'transparent', duration: 0.15 }, "<");
+                }
+            }
+            
+            // 最后一帧显示底部标签
+            tl.to('.canvas-label', { opacity: 1, duration: 0.3 }, "-=0.1");
+            
+            // 稍作停留后迅速切出，准备下一轮
+            tl.to('.peach-canvas .layer', { opacity: 0, duration: 0.3, delay: 2.5 });
+            tl.to('.canvas-label', { opacity: 0, duration: 0.3 }, "<");
+            tl.to(`#step-4, #step-5`, { opacity: 0.3, backgroundColor: 'transparent', borderLeftColor: 'transparent', duration: 0.3 }, "<");
+        }
+
+        window.addEventListener('load', () => {
+            ScrollTrigger.create({
+                trigger: ".case-study-section",
+                start: "top 50%",
+                once: true,
+                onEnter: initPeachAnimation
+            });
+        });
+    </script>
+</body>
+</html>
